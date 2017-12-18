@@ -45,7 +45,10 @@ def get_crypto():
         print """Key is not open, you will need to unlock it."""
         password = getpass()
         with open(UNLOCKED_KEY, 'w+') as f:
-            duration = input('How long should this session remain open (minutes): ')
+            if sys.stdin.isatty():
+                duration = input('How long should this session remain open (minutes): ')
+            else:
+                duration = 10
             duration = duration * 60
 
             # How long should we keep this session open?
@@ -67,7 +70,7 @@ def cli():
 def new(f):
     crypto = get_crypto()
     if not sys.stdin.isatty():
-        raw = sys.stdin
+        raw = sys.stdin.read()
     else:
         call(['vim', f])
         tf = open(f, 'r')
